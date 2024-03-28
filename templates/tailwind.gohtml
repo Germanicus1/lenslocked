@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="min-h-screen bg-gray-200">
   <header class="bg-gradient-to-r from-blue-800 to-indigo-800 text-white">
   <nav class="px-8 py-6 flex items-center">
     <div class="text-4xl pr-12 font-serif">Lenslocked</div>
@@ -17,7 +17,7 @@
     </div>
     <div>
       <a class="pr-4" href="#">Sign in</a>
-      <a class="px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded" href="#">Sign up</a>
+      <a class="px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded" href="/signup">Sign up</a>
     </div>
   </nav>
   </header>
@@ -26,9 +26,6 @@
   <!-- Page content goes here -->
 
 {{define "footer"}}
-<footer class="px-6 py-2 bg-blue-100">
-  <div class="text-gray-500 text-xs"><p>Copyright Peter Kerschbaumer 2024</p></div>
-</footer>
 </body>
 </html>
 {{end}}
