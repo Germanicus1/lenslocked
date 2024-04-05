@@ -40,7 +40,6 @@ func main() {
 		panic(err)
 	}
 	defer db.Close()
-
 	fmt.Println("Connected!")
 
 	_, err = db.Exec(`
@@ -57,11 +56,5 @@ func main() {
 			escription TEXT
 		);
 	`)
-	if err != nil {
-		fmt.Println("Could not ping().")
-		panic(err)
-	}
-	defer db.Close()
-
 	fmt.Println("Tables created!")
 }
