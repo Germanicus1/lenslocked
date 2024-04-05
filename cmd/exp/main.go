@@ -8,26 +8,59 @@ import (
 )
 
 type PostgresConfig struct {
-	Host string
-	Port string
-	User string
+	Host     string
+	Port     string
+	User     string
 	Password string
-	DbName string
-	SSLMode string
+	Database string
+	SSLMode  string
 }
 
 func (cfg PostgresConfig) String() string {
-	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", cfg.Host, cfg.Port, cfg.User. cfg.Password, cfg.DbName, cfg.SSLMode)
+	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.Database, cfg.SSLMode)
 }
 
 func main() {
-	db, err := sql.Open("pgx", "host=localhost port=6543 user=baloo password=junglebook dbname=lenslocked sslmode=disable")
-	if err!=nil {
-		panic(err)
+	cfg := PostgresConfig{
+		Host:     "localhost",
+		Port:     "5432",
+		User:     "baloo",
+		Password: "junglebook",
+		Database: "lenslocked",
+		SSLMode:  "disable",
 	}
-	err = db.Ping()
+	db, err := sql.Open("pgx", cfg.String())
+
 	if err != nil {
 		panic(err)
 	}
-	d efer db.Close()
+
+	err = db.Ping()
+
+	if err != nil {
+		fmt.Println("Could not ping().")
+		panic(err)
+	}
+	defer db.Close()
+
+	fmt.Println("Connected!")
+
+	_, err = db.Exec(`
+		CREATE TABLE IF NOT EXISTS users (
+			id SERIAL PRIMARY KEY,
+			name TEXT,
+			email TEXT UNIQUE NOT NULL
+		);
+
+		CREATE TABLE IF NOT EXISTS orders (
+			id SERIAL PRIMARY KEY,
+			user_id INT NOT NULL,
+			amount INT,
+			escription TEXT
+		);
+	`)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Tables created!")
 }
