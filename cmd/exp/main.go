@@ -56,5 +56,9 @@ func main() {
 			escription TEXT
 		);
 	`)
+	if err != nil {
+		panic(err)
+	}
+
 	fmt.Println("Tables created!")
 }
