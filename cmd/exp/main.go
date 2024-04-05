@@ -37,6 +37,8 @@ func main() {
 
 	err = db.Ping()
 
+<<<<<<< HEAD
+=======
 	if err != nil {
 		fmt.Println("Could not ping().")
 		panic(err)
@@ -44,4 +46,31 @@ func main() {
 	defer db.Close()
 
 	fmt.Println("Connected!")
+
+	_, err = db.Exec(`
+		CREATE TABLE IF NOT EXISTS users (
+			id SERIAL PRIMARY KEY,
+			name TEXT,
+			email TEXT UNIQUE NOT NULL
+		);
+
+		CREATE TABLE IF NOT EXISTS orders (
+			id SERIAL PRIMARY KEY,
+			user_id INT NOT NULL,
+			amount INT,
+			escription TEXT
+		);
+	`)
+>>>>>>> execute-sql-with-go
+	if err != nil {
+		fmt.Println("Could not ping().")
+		panic(err)
+	}
+<<<<<<< HEAD
+	defer db.Close()
+
+	fmt.Println("Connected!")
+=======
+	fmt.Println("Tables created!")
+>>>>>>> execute-sql-with-go
 }
