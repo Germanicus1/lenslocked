@@ -30,15 +30,11 @@ func main() {
 		SSLMode:  "disable",
 	}
 	db, err := sql.Open("pgx", cfg.String())
-
 	if err != nil {
 		panic(err)
 	}
 
 	err = db.Ping()
-
-<<<<<<< HEAD
-=======
 	if err != nil {
 		fmt.Println("Could not ping().")
 		panic(err)
@@ -61,16 +57,11 @@ func main() {
 			escription TEXT
 		);
 	`)
->>>>>>> execute-sql-with-go
 	if err != nil {
 		fmt.Println("Could not ping().")
 		panic(err)
 	}
-<<<<<<< HEAD
 	defer db.Close()
 
-	fmt.Println("Connected!")
-=======
 	fmt.Println("Tables created!")
->>>>>>> execute-sql-with-go
 }
