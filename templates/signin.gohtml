@@ -1,0 +1,50 @@
+{{template "header" .}}
+<div class="py-12 flex justify-center">
+	<div class="px-8 py-8 bg-white rounded shadow">
+		<h1 class="pt-4 pb-8 text-center text-3xl font-bold text-gray-900">
+			Welcome back!
+		</h1>
+		<form action="/signin" method="post">
+			<div class="py-2">
+				<label for="email">Email Address</label>
+				<input
+					name="email"
+					id="email"
+          type="email"
+					placeholder="Email address"
+					required
+          autocomplete="email"
+					class="w-full px-3 py-2 border border-gray-300 placeholder-gray-400"
+          value="{{.Email}}"
+          {{if not .Email}}autofocus{{end}}
+				/>
+			</div>
+			<div class="py-4">
+				<label for="password">Password</label>
+				<input
+					name="password"
+					id="Password"
+					type="password"
+					placeholder="Password"
+					required
+					class="w-full px-3 py-2 border border-gray-300 placeholder-gray-400"
+          {{if .Email}}autofocus{{end}}
+				/>
+			</div>
+			<div class="py-4">
+				<button
+					type="submit"
+					class="w-full py-4 px-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded font-bold text-lg"
+				>
+					Sign in
+				</button>
+			</div>
+			<div class="py-2 flex justify-between">
+				<p class="text-xs text-gray-500">
+					<a class="underline" href="/reset-pw">Forgot your password?</a>
+				</p>
+			</div>
+		</form>
+	</div>
+</div>
+{{template "footer" .}}

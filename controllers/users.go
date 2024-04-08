@@ -7,11 +7,22 @@ import (
 	"githubn.com/Germanicus1/lenslocked/models"
 )
 
+//TODO: adding a template and a handler method to process the sign in form
+
 type Users struct {
 	Templates struct {
-		New Template
+		New    Template
+		SignIn Template
 	}
 	UserService *models.UserService
+}
+
+func (u Users) SignIn(w http.ResponseWriter, r *http.Request) {
+	var data struct {
+		Email string
+	}
+	data.Email = r.FormValue("email")
+	u.Templates.SignIn.Execute(w, data)
 }
 
 func (u Users) New(w http.ResponseWriter, r *http.Request) {
