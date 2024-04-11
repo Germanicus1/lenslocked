@@ -36,7 +36,15 @@ func (u Users) ProcessSignIn(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Somethiong went wrong.", http.StatusInternalServerError)
 		return
 	}
-	fmt.Fprintf(w, "user authenticated: %+v", user)
+
+	cookie := http.Cookie{
+		Name:  "email",
+		Value: user.Email,
+		Path:  "/",
+	}
+	http.SetCookie(w, &cookie)
+	fmt.Fprintf(w, "cookie set: %+v\n", cookie)
+	fmt.Fprintf(w, "user authenticated: %+v\n", user)
 }
 
 func (u Users) New(w http.ResponseWriter, r *http.Request) {
@@ -56,5 +64,6 @@ func (u Users) Create(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Somethiong went wrong.", http.StatusInternalServerError)
 		return
 	}
+
 	fmt.Fprintf(w, "User created: %+v", user) // +v gives fieldnames as well
 }
