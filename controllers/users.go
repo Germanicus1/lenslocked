@@ -2,8 +2,10 @@ package controllers
 
 import (
 	"fmt"
+	"html/template"
 	"net/http"
 
+	"github.com/gorilla/csrf"
 	"githubn.com/Germanicus1/lenslocked/models"
 )
 
@@ -50,9 +52,11 @@ func (u Users) ProcessSignIn(w http.ResponseWriter, r *http.Request) {
 
 func (u Users) New(w http.ResponseWriter, r *http.Request) {
 	var data struct {
-		Email string
+		Email     string
+		CSRFField template.HTML
 	}
 	data.Email = r.FormValue("email")
+	data.CSRFField = csrf.TemplateField(r)
 	u.Templates.New.Execute(w, data)
 }
 
