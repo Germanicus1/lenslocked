@@ -15,6 +15,26 @@ type Users struct {
 	UserService *models.UserService
 }
 
+func (u Users) New(w http.ResponseWriter, r *http.Request) {
+	var data struct {
+		Email string
+	}
+	data.Email = r.FormValue("email")
+	u.Templates.New.Execute(w, data)
+}
+
+func (u Users) Create(w http.ResponseWriter, r *http.Request) {
+	email := r.FormValue("email")
+	password := r.FormValue("password")
+	user, err := u.UserService.Create(email, password)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, "Something went wrong.", http.StatusInternalServerError)
+		return
+	}
+	fmt.Fprintf(w, "User created: %+v", user)
+}
+
 func (u Users) SignIn(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		Email string
@@ -33,47 +53,24 @@ func (u Users) ProcessSignIn(w http.ResponseWriter, r *http.Request) {
 	user, err := u.UserService.Authenticate(data.Email, data.Password)
 	if err != nil {
 		fmt.Println(err)
-		http.Error(w, "Somethiong went wrong.", http.StatusInternalServerError)
+		http.Error(w, "Something went wrong.", http.StatusInternalServerError)
 		return
 	}
-
 	cookie := http.Cookie{
-		Name:     "email",
-		Value:    user.Email,
-		Path:     "/",
-		HttpOnly: true,
+		Name:  "email",
+		Value: user.Email,
+		Path:  "/",
 	}
 	http.SetCookie(w, &cookie)
-	fmt.Fprintf(w, "cookie set: %+v\n", cookie)
-	fmt.Fprintf(w, "user authenticated: %+v\n", user)
-}
-
-func (u Users) New(w http.ResponseWriter, r *http.Request) {
-	var data struct {
-		Email string
-	}
-	data.Email = r.FormValue("email")
-	u.Templates.New.Execute(w, data)
-}
-
-func (u Users) Create(w http.ResponseWriter, r *http.Request) {
-	email := r.FormValue("email")
-	password := r.FormValue("password")
-	user, err := u.UserService.Create(email, password)
-	if err != nil {
-		fmt.Println(err)
-		http.Error(w, "Somethiong went wrong.", http.StatusInternalServerError)
-		return
-	}
-	fmt.Fprintf(w, "User created: %+v", user) // +v gives fieldnames as well
+	fmt.Fprintf(w, "User authenticated: %+v", user)
 }
 
 func (u Users) CurrentUser(w http.ResponseWriter, r *http.Request) {
 	email, err := r.Cookie("email")
 	if err != nil {
-		fmt.Fprint(w, "Could nbot read the email.")
+		fmt.Fprint(w, "The email cookie could not be read.")
 		return
 	}
-	fmt.Fprintf(w, "Email cookie: %+v\n", email.Value)
-	fmt.Fprintf(w, "Complete Header: %+v\n", r.Header)
+	fmt.Fprintf(w, "Email cookie: %s\n", email.Value)
+	fmt.Fprintf(w, "Headers: %+v\n", r.Header)
 }
