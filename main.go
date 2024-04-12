@@ -55,8 +55,15 @@ func main() {
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 	})
-
 	fmt.Println("Starting the server at :3000...")
 
+	// csrfKey := "R7jFmNt2qW5eYpH3L0vZ6bV9gC4xXwD1"
+	// csrfMw := csrf.Protect(
+	// 	[]byte(csrfKey),
+	// 	//TODO: Fix this before deploy
+	// 	csrf.Secure(false),
+	// )
+
+	// http.ListenAndServe(":3000", csrfMw(r))
 	http.ListenAndServe(":3000", r)
 }
