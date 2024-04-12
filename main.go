@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/gorilla/csrf"
 	"githubn.com/Germanicus1/lenslocked/controllers"
 	"githubn.com/Germanicus1/lenslocked/models"
 	"githubn.com/Germanicus1/lenslocked/templates"
@@ -57,13 +58,13 @@ func main() {
 	})
 	fmt.Println("Starting the server at :3000...")
 
-	// csrfKey := "R7jFmNt2qW5eYpH3L0vZ6bV9gC4xXwD1"
-	// csrfMw := csrf.Protect(
-	// 	[]byte(csrfKey),
-	// 	//TODO: Fix this before deploy
-	// 	csrf.Secure(false),
-	// )
+	csrfKey := "R7jFmNt2qW5eYpH3L0vZ6bV9gC4xXwD1"
+	csrfMw := csrf.Protect(
+		[]byte(csrfKey),
+		//TODO: Fix this before deploy
+		csrf.Secure(false),
+	)
 
-	// http.ListenAndServe(":3000", csrfMw(r))
-	http.ListenAndServe(":3000", r)
+	http.ListenAndServe(":3000", csrfMw(r))
+	// http.ListenAndServe(":3000", r)
 }
