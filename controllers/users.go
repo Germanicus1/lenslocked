@@ -38,9 +38,10 @@ func (u Users) ProcessSignIn(w http.ResponseWriter, r *http.Request) {
 	}
 
 	cookie := http.Cookie{
-		Name:  "email",
-		Value: user.Email,
-		Path:  "/",
+		Name:     "email",
+		Value:    user.Email,
+		Path:     "/",
+		HttpOnly: true,
 	}
 	http.SetCookie(w, &cookie)
 	fmt.Fprintf(w, "cookie set: %+v\n", cookie)
@@ -64,6 +65,15 @@ func (u Users) Create(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Somethiong went wrong.", http.StatusInternalServerError)
 		return
 	}
-
 	fmt.Fprintf(w, "User created: %+v", user) // +v gives fieldnames as well
+}
+
+func (u Users) CurrentUser(w http.ResponseWriter, r *http.Request) {
+	email, err := r.Cookie("email")
+	if err != nil {
+		fmt.Fprint(w, "Could nbot read the email.")
+		return
+	}
+	fmt.Fprintf(w, "Email cookie: %+v\n", email.Value)
+	fmt.Fprintf(w, "Complete Header: %+v\n", r.Header)
 }
