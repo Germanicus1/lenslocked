@@ -1,11 +1,15 @@
 package views
 
 import (
+	"bytes"
 	"fmt"
 	"html/template"
+	"io"
 	"io/fs"
 	"log"
 	"net/http"
+
+	"github.com/gorilla/csrf"
 )
 
 func Must(t Template, err error) Template {
@@ -17,10 +21,14 @@ func Must(t Template, err error) Template {
 
 func ParseFS(fs fs.FS, pattern ...string) (Template, error) {
 	tpl := template.New(pattern[0])
+
+	// PLaceholder function so the templates can be parsed
+	// without generating an error.
 	tpl = tpl.Funcs(
 		template.FuncMap{
-			"csrfField": func() template.HTML {
-				return `<!-- TODO: Implement csrf field-->`
+			"csrfField": func() (template.HTML, error) {
+				return "", fmt.Errorf("scrf field not implemented.")
+				// The empty string will be replaced in Execute()
 			},
 		},
 	)
@@ -48,11 +56,26 @@ type Template struct {
 }
 
 func (t Template) Execute(w http.ResponseWriter, r *http.Request, data interface{}) {
+	tpl, err := t.htmlTpl.Clone()
+	if err != nil {
+		log.Printf("Cloning template object: %v", err)
+		http.Error(w, "Could not load page: %v", http.StatusInternalServerError)
+		return
+	}
+	tpl = tpl.Funcs(
+		template.FuncMap{
+			"csrfField": func() template.HTML {
+				return csrf.TemplateField(r)
+			},
+		},
+	)
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	err := t.htmlTpl.Execute(w, data)
+	var buf bytes.Buffer
+	err = tpl.Execute(&buf, data)
 	if err != nil {
 		log.Printf("parsing template: %v", err)
 		http.Error(w, "There was an error executing the template.", http.StatusInternalServerError)
 		return // exit from the program.
 	}
+	io.Copy(w, &buf)
 }
