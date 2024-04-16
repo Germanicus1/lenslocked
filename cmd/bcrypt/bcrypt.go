@@ -37,7 +37,7 @@ func hash(password string) (string, error) {
 }
 
 func compare(password string, hash string) (bool, error) {
-	// TODO: Compare the hash of the password witht eh stored hash
+	// TODO: Compare the hash of the password with the stored hash
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	if err != nil {
 		panic(err)
