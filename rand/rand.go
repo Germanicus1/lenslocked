@@ -30,6 +30,6 @@ func String(n int) (string, error) {
 
 const SessionTokenBytes = 32
 
-func Sessiontoken() (string, error) {
+func SessionToken() (string, error) {
 	return String(SessionTokenBytes)
 }
