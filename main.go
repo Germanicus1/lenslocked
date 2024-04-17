@@ -64,7 +64,7 @@ func main() {
 	csrfKey := "R7jFmNt2qW5eYpH3L0vZ6bV9gC4xXwD1"
 	csrfMw := csrf.Protect(
 		[]byte(csrfKey),
-		//TODO: Fix this before deploy
+		// TODO: Fix this before deploy
 		csrf.Secure(false),
 	)
 
