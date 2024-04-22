@@ -45,6 +45,11 @@ func main() {
 		"signup.gohtml", "tailwind.gohtml",
 	))
 
+	// usersC.Templates.User = views.Must(views.ParseFS(
+	// 	templates.FS,
+	// 	"me.gohtml", "tailwind.gohtml",
+	// ))
+
 	usersC.Templates.SignIn = views.Must(views.ParseFS(
 		templates.FS,
 		"signin.gohtml", "tailwind.gohtml",

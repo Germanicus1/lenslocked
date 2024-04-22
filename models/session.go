@@ -32,6 +32,19 @@ type SessionService struct {
 	BytesPerToken int
 }
 
+// func (tm *TokenManager) New() (token, tokenHash string, err error) {
+// 	bytesPerToken := ss.BytesPerToken
+// 	if bytesPerToken < MinBytesPerToken {
+// 		bytesPerToken = MinBytesPerToken
+// 	}
+// 	token, err = rand.String(bytesPerToken)
+// 	if err != nil {
+// 		return nil, fmt.Errorf("create: %w", err)
+// 	}
+// 	tokenHash = ss.hash(token)
+// 	return token, tokenHash
+// }
+
 func (ss *SessionService) Create(userID int) (*Session, error) {
 	bytesPerToken := ss.BytesPerToken
 	if bytesPerToken < MinBytesPerToken {
@@ -69,26 +82,16 @@ func (ss *SessionService) User(token string) (*User, error) {
 	tokenHash := ss.hash(token)
 	var user User
 	row := ss.DB.QueryRow(`
-			SELECT
-				user_id
-			FROM
-				sessions
-			WHERE
-				token_hash = $1;`,
-		tokenHash)
-	err := row.Scan(&user.ID)
-	if err != nil {
-		return nil, fmt.Errorf("user: %w", err)
-	}
-	row = ss.DB.QueryRow(`
-			SELECT
-				email,
-				password_hash
-			FROM
-				users
-			WHERE
-				id = $1;`, user.ID)
-	err = row.Scan(&user.Email, &user.PasswordHash)
+		SELECT
+			user_id,
+			users.email,
+			users.password_hash
+		FROM
+			sessions
+			JOIN users ON sessions.user_id = users.id
+		WHERE
+			token_hash = $1;`, tokenHash)
+	err := row.Scan(&user.ID, &user.Email, &user.PasswordHash)
 	if err != nil {
 		return nil, fmt.Errorf("user: %w", err)
 	}
