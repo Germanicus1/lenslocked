@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"githubn.com/Germanicus1/lenslocked/context"
 	"githubn.com/Germanicus1/lenslocked/models"
 )
 
@@ -75,19 +76,25 @@ func (u Users) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (u Users) CurrentUser(w http.ResponseWriter, r *http.Request) {
-	tokenCookie, err := r.Cookie(CookieSession)
-	if err != nil {
-		fmt.Println(err)
-		http.Redirect(w, r, "/signin", http.StatusFound)
-		return
-	}
-	user, err := u.SessionService.User(tokenCookie.Value)
-	if err != nil {
-		fmt.Println(err)
-		http.Redirect(w, r, "/signin", http.StatusFound)
-		return
+	user := context.User(r.Context())
+	if user == nil {
+		http.Redirect(w, r, "/signin", http.StatusNotFound)
 	}
 	fmt.Fprintf(w, "Current user: %s\n", user.Email)
+
+	// tokenCookie, err := r.Cookie(CookieSession)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	http.Redirect(w, r, "/signin", http.StatusFound)
+	// 	return
+	// }
+	// user, err := u.SessionService.User(tokenCookie.Value)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	http.Redirect(w, r, "/signin", http.StatusFound)
+	// 	return
+	// }
+	// fmt.Fprintf(w, "Current user: %s\n", user.Email)
 }
 
 func (u Users) ProcessSignOut(w http.ResponseWriter, r *http.Request) {
