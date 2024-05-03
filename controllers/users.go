@@ -81,7 +81,6 @@ func (u Users) CurrentUser(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/signin", http.StatusFound)
 		return
 	}
-
 	user, err := u.SessionService.User(tokenCookie.Value)
 	if err != nil {
 		fmt.Println(err)
