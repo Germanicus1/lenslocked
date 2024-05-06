@@ -7,6 +7,7 @@ import (
 	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
+// Using mailtrap.io
 const (
 	host     = "sandbox.smtp.mailtrap.io"
 	port     = 587

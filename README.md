@@ -9,4 +9,5 @@ A project to learn webdevelopment with [GO](https://go.dev/). Following a course
 * [18.1 - Password Reset Overview](https://courses.calhoun.io/lessons/les_wdv2_password_reset_overview)
 * [18.2 - SMTP Services](https://courses.calhoun.io/lessons/les_wdv2_smtp_services)
 * [18.3 - Building Emails with SMTP](https://courses.calhoun.io/lessons/les_wdv2_building_emails)
-*
+* 18.4 - Sending emails with SMTP
+* [18.5 - Building an email service](https://courses.calhoun.io/lessons/les_wdv2_email_service)
