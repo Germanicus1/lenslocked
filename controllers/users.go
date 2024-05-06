@@ -26,17 +26,18 @@ func (u Users) New(w http.ResponseWriter, r *http.Request) {
 }
 
 func (u Users) Create(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Creating a user")
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 	user, err := u.UserService.Create(email, password)
 	if err != nil {
 		fmt.Println(err)
-		http.Error(w, "Something went wrong.", http.StatusInternalServerError)
+		http.Error(w, "UserService.Create: Something went wrong", http.StatusInternalServerError)
 		return
 	}
 	session, err := u.SessionService.Create(user.ID)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("SessionService.Create:", err)
 		// TODO: Long term, we should show a warning about not being able to sign the user in.
 		http.Redirect(w, r, "/signin", http.StatusFound)
 		return
@@ -94,10 +95,10 @@ func (u Users) ProcessSignOut(w http.ResponseWriter, r *http.Request) {
 
 func (u Users) CurrentUser(w http.ResponseWriter, r *http.Request) {
 	user := context.User(r.Context())
-	if user == nil {
-		http.Redirect(w, r, "/signin", http.StatusFound)
-		return
-	}
+	// if user == nil {
+	// 	http.Redirect(w, r, "/signin", http.StatusFound)
+	// 	return
+	// }
 	fmt.Fprintf(w, "Current user: %s\n", user.Email)
 }
 
@@ -146,6 +147,7 @@ func (umw UserMiddleware) RequireUser(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		user := context.User(r.Context())
 		if user == nil {
+			fmt.Println("No user logged in")
 			http.Redirect(w, r, "/signin", http.StatusFound)
 			return
 		}

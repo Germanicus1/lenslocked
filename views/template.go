@@ -10,6 +10,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/csrf"
+	"githubn.com/Germanicus1/lenslocked/context"
+	"githubn.com/Germanicus1/lenslocked/models"
 )
 
 func Must(t Template, err error) Template {
@@ -22,13 +24,15 @@ func Must(t Template, err error) Template {
 func ParseFS(fs fs.FS, pattern ...string) (Template, error) {
 	tpl := template.New(pattern[0])
 
-	// PLaceholder function so the templates can be parsed
+	// Placeholder function so the templates can be parsed
 	// without generating an error.
 	tpl = tpl.Funcs(
 		template.FuncMap{
 			"csrfField": func() (template.HTML, error) {
-				return "", fmt.Errorf("scrf field not implemented.")
-				// The empty string will be replaced in Execute()
+				return "", fmt.Errorf("csrf field not implemented")
+			},
+			"currentUser": func() (template.HTML, error) {
+				return "", fmt.Errorf("currentUser not implemented")
 			},
 		},
 	)
@@ -67,14 +71,18 @@ func (t Template) Execute(w http.ResponseWriter, r *http.Request, data interface
 			"csrfField": func() template.HTML {
 				return csrf.TemplateField(r)
 			},
+			"currentUser": func() *models.User {
+				return context.User(r.Context())
+			},
 		},
 	)
+
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	var buf bytes.Buffer
 	err = tpl.Execute(&buf, data)
 	if err != nil {
 		log.Printf("parsing template: %v", err)
-		http.Error(w, "There was an error executing the template.", http.StatusInternalServerError)
+		http.Error(w, "There was an error executing the template", http.StatusInternalServerError)
 		return // exit from the program.
 	}
 	io.Copy(w, &buf)

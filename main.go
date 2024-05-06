@@ -27,6 +27,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println("Database setup done")
 
 	// Setup our model services
 	userService := models.UserService{
@@ -47,6 +48,7 @@ func main() {
 		// TODO: Fix this before deploying
 		csrf.Secure(false),
 	)
+	fmt.Println("Middleware setup done")
 
 	// Setup controllers (handlers functions)
 	usersC := controllers.Users{
@@ -75,7 +77,7 @@ func main() {
 	r.Post("/signup", usersC.Create)
 	r.Get("/signin", usersC.SignIn)
 	r.Post("/signin", usersC.ProcessSignIn)
-	r.Post("/signout", usersC.ProcessSignOut)
+	r.With(umw.RequireUser).Post("/signout", usersC.ProcessSignOut)
 	r.Route("/users/me", func(r chi.Router) {
 		r.Use(umw.RequireUser)
 		r.Get("/", usersC.CurrentUser)
