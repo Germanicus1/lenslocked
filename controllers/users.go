@@ -112,7 +112,8 @@ func (umw UserMiddleware) SetUser(next http.Handler) http.Handler {
 		// proceed with the request. The goal of this middleware isn't to limit
 		// access. It only sets the user in the context if it can.
 		token, err := readCookie(r, CookieSession)
-		if err != nil {
+		if err != nil || token == "" {
+			fmt.Println("Token is empty")
 			// Cannot lookup the user with no cookie, so proceed without a user being
 			// set, then return.
 			next.ServeHTTP(w, r)

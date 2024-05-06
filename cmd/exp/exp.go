@@ -3,45 +3,32 @@ package main
 import (
 	"fmt"
 
+	"github.com/go-mail/mail/v2"
 	_ "github.com/jackc/pgx/v4/stdlib"
-	"githubn.com/Germanicus1/lenslocked/models"
+)
+
+const (
+	host     = "sandbox.smtp.mailtrap.io"
+	port     = 587
+	username = "c8a92554e741aa"
+	password = "8320480c60858d"
 )
 
 func main() {
-	cfg := models.DefaultPostgresConfig()
-	db, err := models.Open(cfg)
+	from := "test@lenslocked.com"
+	to := "peter@kerschbaumer.es"
+	subject := "This is a test email"
+	html := "<h1>This is the body off my email</h1>"
+	msg := mail.NewMessage()
+	msg.SetHeader("To", to)
+	msg.SetHeader("From", from)
+	msg.SetHeader("Subject", subject)
+	msg.SetBody("text/plain", "This is the body off my email")
+	msg.AddAlternative("text/html", html)
+	dialer := mail.NewDialer(host, port, username, password)
+	err := dialer.DialAndSend(msg)
 	if err != nil {
 		panic(err)
 	}
-	defer db.Close()
-
-	err = db.Ping()
-	if err != nil {
-		fmt.Println("Could not ping().")
-		panic(err)
-	}
-	fmt.Println("Connected!")
-
-	us := models.UserService{
-		DB: db,
-	}
-	user, err := us.Create("peter@kerschbaumer.es", "peter123")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(user)
-
-	// name := "Peter"
-	// email := "peter1@kerschbaumer.es"
-
-	// // Insert some data
-	// row := db.QueryRow(`
-	// 	INSERT INTO users (name, email)
-	// 	VALUES ($1, $2) RETURNING id`, name, email)
-	// var id int
-	// err = row.Scan(&id)
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// fmt.Println("User created. ID:", id)
+	fmt.Println("Message sent")
 }
