@@ -3,6 +3,7 @@
 A project to learn webdevelopment with [GO](https://go.dev/). Following a course by [Jon Calhoun](https://www.calhoun.io/).
 
 ## Log
+Just a note so I remember where I am. This is not stored on the course site.
 * [17.7 - Requiring a User via Middleware](https://courses.calhoun.io/lessons/les_wdv2_require_user_mw)
 * [17.8 - Accessing the Current User in Templates](https://courses.calhoun.io/lessons/les_wdv2_current_user_tpl_func)
 * [17.9 - Request-Scoped Values](https://courses.calhoun.io/lessons/les_wdv2_request_scoped_vals)
@@ -11,3 +12,4 @@ A project to learn webdevelopment with [GO](https://go.dev/). Following a course
 * [18.3 - Building Emails with SMTP](https://courses.calhoun.io/lessons/les_wdv2_building_emails)
 * 18.4 - Sending emails with SMTP
 * [18.5 - Building an email service](https://courses.calhoun.io/lessons/les_wdv2_email_service)
+* [18.6 - EmailService.Send](https://courses.calhoun.io/lessons/les_wdv2_email_service_send)
