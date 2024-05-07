@@ -13,3 +13,5 @@ Just a note so I remember where I am. This is not stored on the course site.
 * 18.4 - Sending emails with SMTP
 * [18.5 - Building an email service](https://courses.calhoun.io/lessons/les_wdv2_email_service)
 * [18.6 - EmailService.Send](https://courses.calhoun.io/lessons/les_wdv2_email_service_send)
+* [18.7 - Forgot Password Email](https://courses.calhoun.io/lessons/les_wdv2_forgot_pw_email)
+* [18.8 - ENV variables](https://courses.calhoun.io/lessons/les_wdv2_env_variables)

@@ -2,34 +2,36 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"strconv"
 
 	_ "github.com/jackc/pgx/v4/stdlib"
+	"github.com/joho/godotenv"
 	"githubn.com/Germanicus1/lenslocked/models"
 )
 
-// Using mailtrap.io
-const (
-	host     = "sandbox.smtp.mailtrap.io"
-	port     = 587
-	username = "c8a92554e741aa"
-	password = "8320480c60858d"
-)
-
 func main() {
-	email := models.Email{
-		From:      "test@lenslocked.com",
-		To:        "peter@kerschbaumer.es",
-		Subject:   "This is a test email",
-		Plaintext: "This is just the plain text body",
-		HTML:      "<h1>This is the HTML body off my email</h1>",
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
 	}
+
+	host := os.Getenv("SMTP_HOST")
+	port, err := strconv.Atoi(os.Getenv("SMTP_PORT"))
+	if err != nil {
+		panic(err)
+	}
+	username := os.Getenv("SMTP_USERNAME")
+	password := os.Getenv("SMTP_PASSWORD")
+
 	es := models.NewEmailService(models.SMTPConfig{
 		Host:     host,
 		Port:     port,
 		Username: username,
 		Password: password,
 	})
-	err := es.Send(email)
+	err = es.ForgotPassword("peter@kerschbaumer.es", "https://lenslocked.com/reset-pw")
 	if err != nil {
 		panic(err)
 	}
