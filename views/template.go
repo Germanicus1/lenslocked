@@ -87,3 +87,18 @@ func (t Template) Execute(w http.ResponseWriter, r *http.Request, data interface
 	}
 	io.Copy(w, &buf)
 }
+
+// func (t Template) LoadHTMLEmail(htmlEmailFile string, data interface{}) (Template, error) {
+// htmlTemplate, err := template.ParseFiles(htmlEmailFile)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	// Execute HTML template
+// 	var htmlContent bytes.Buffer
+// 	err = htmlTemplate.Execute(&htmlContent, data)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+
+// 	return htmlTemplate, nil
+// }
