@@ -207,6 +207,14 @@ func (u Users) ProcessResetPassword(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Something went wrong", http.StatusInternalServerError)
 		return
 	}
+
+	err = u.UserService.UpdatePassword(user.ID, data.Password)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, "Something went wrong", http.StatusInternalServerError)
+		return
+	}
+
 	// Sign in the user now that the password has been reset.
 	// Any errors from this point onwards should redirect the user to the sign
 	// in  page.
