@@ -12,8 +12,8 @@ Just a note so I remember where I am. Progress is not stored on the course site.
 - [x] 19.2 Password Reset Service Stubs
 - [x] 19.3 Password Reset Service Stubs
 - [x] 19.4 Forgot Password HTTP Handler
-- [ ] 19.5 Asynchronous Emails
-- [ ] 19.6 Forgot Password HTML Template
+- [x] 19.5 Asynchronous Emails
+- [x] 19.6 Forgot Password HTML Template
 - [ ] 19.7 Initializing Services with ENV Vars
 - [ ] 19.8 Check Your Email HTML Template
 - [ ] 19.9 Reset Password HTTP Handlers

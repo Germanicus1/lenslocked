@@ -2,9 +2,12 @@
 <div class="py-12 flex justify-center">
 	<div class="px-8 py-8 bg-white rounded shadow">
 		<h1 class="pt-4 pb-8 text-center text-3xl font-bold text-gray-900">
-			Start sharing your photos today!
+			Forgot your password?
 		</h1>
-		<form action="/signup" method="post">
+    <p class="text-sm text-grey-600 pb-4">
+      No problem. Eneter your email address below and we sewnd you a link to reset your password.
+    </p>
+		<form action="/forgot-pw" method="post">
 			<div class="hidden">
 				{{csrfField}}
 			</div>
@@ -19,19 +22,7 @@
           autocomplete="email"
 					class="w-full px-3 py-2 border border-gray-300 placeholder-gray-400"
           value="{{.Email}}"
-          {{if not .Email}}autofocus{{end}}
-				/>
-			</div>
-			<div class="py-4">
-				<label for="password">Password</label>
-				<input
-					name="password"
-					id="Password"
-					type="password"
-					placeholder="Password"
-					required
-					class="w-full px-3 py-2 border border-gray-300 placeholder-gray-400"
-          {{if .Email}}autofocus{{end}}
+          autofocus
 				/>
 			</div>
 			<div class="py-4">
@@ -39,16 +30,16 @@
 					type="submit"
 					class="w-full py-4 px-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded font-bold text-lg"
 				>
-					Sign up
+					Reset password
 				</button>
 			</div>
 			<div class="py-2 flex justify-between">
 				<p class="text-xs text-gray-500">
-					Already have an account?
-					<a class="underline" href="/signin">Sign in</a>
+          Need an account?
+					<a class="underline" href="/signup">Sign up?</a>
 				</p>
 				<p class="text-xs text-gray-500">
-					<a class="underline" href="/forgot-pw">Forgot your password?</a>
+					<a class="underline" href="/signin">Remember your password?</a>
 				</p>
 			</div>
 		</form>
