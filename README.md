@@ -17,8 +17,8 @@ Just a note so I remember where I am. Progress is not stored on the course site.
 - [x] 19.7 Initializing Services with ENV Vars
 - [x] 19.8 Check Your Email HTML Template
 - [x] 19.9 Reset Password HTTP Handlers
-- [ ] 19.10 Reset Password HTML Template
-- [ ] 19.11 Update Password Function
+- [x] 19.10 Reset Password HTML Template
+- [x] 19.11 Update Password Function
 - [ ] 19.12 PasswordReset Creation
 - [ ] 19.13 Implementing Consume
 - [ ] 19.15 Password Reset Exercises
