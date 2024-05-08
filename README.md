@@ -11,7 +11,7 @@ Just a note so I remember where I am. Progress is not stored on the course site.
 - [x] 18.5 - Building an email servicemailt DB Migration
 - [x] 19.2 Password Reset Service Stubs
 - [x] 19.3 Password Reset Service Stubs
-- [ ] 19.4 Forgot Password HTTP Handler
+- [x] 19.4 Forgot Password HTTP Handler
 - [ ] 19.5 Asynchronous Emails
 - [ ] 19.6 Forgot Password HTML Template
 - [ ] 19.7 Initializing Services with ENV Vars
