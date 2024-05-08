@@ -19,6 +19,6 @@ Just a note so I remember where I am. Progress is not stored on the course site.
 - [x] 19.9 Reset Password HTTP Handlers
 - [x] 19.10 Reset Password HTML Template
 - [x] 19.11 Update Password Function
-- [ ] 19.12 PasswordReset Creation
+- [x] 19.12 PasswordReset Creation
 - [ ] 19.13 Implementing Consume
 - [ ] 19.15 Password Reset Exercises
