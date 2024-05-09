@@ -132,7 +132,6 @@ func main() {
 		views.ParseFS(templates.FS, "contact.gohtml", "tailwind.gohtml"))))
 	r.Get("/faq", controllers.FAQ(
 		views.Must(views.ParseFS(templates.FS, "faq.gohtml", "tailwind.gohtml"))))
-	// r.Get("/signup", TimerMiddleware(usersC.New))
 	r.Get("/signup", usersC.New)
 	r.Post("/signup", usersC.Create)
 	r.Get("/signin", usersC.SignIn)
@@ -152,19 +151,9 @@ func main() {
 	})
 
 	// Start the server
-	fmt.Printf("Starting the server on %s", cfg.Server.Adress)
+	fmt.Printf("Starting the server on %s...", cfg.Server.Adress)
 	err = http.ListenAndServe(cfg.Server.Adress, r)
 	if err != nil {
 		panic(err)
 	}
 }
-
-// Uncomment the TimerMiddleware func and use it above in main() to see
-// it in action.
-// func TimerMiddleware(h http.HandlerFunc) http.HandlerFunc {
-// 	return func(w http.ResponseWriter, r *http.Request) {
-// 		start := time.Now()
-// 		h(w, r)
-// 		fmt.Println("Request time:", time.Since(start))
-// 	}
-// }

@@ -124,7 +124,7 @@ func (u Users) ProcessForgotPassword(w http.ResponseWriter, r *http.Request) {
 	pwReset, err := u.PasswordResetService.Create(data.Email)
 	if err != nil {
 		// TODO: Handle other error cases in the future (f.ex. email doesn't exist)
-		fmt.Println(err)
+		fmt.Println("ProcessForgotPassword.Create:", err)
 		http.Error(w, "Something went wrong.", http.StatusInternalServerError)
 		return
 	}
@@ -132,11 +132,12 @@ func (u Users) ProcessForgotPassword(w http.ResponseWriter, r *http.Request) {
 	vals := url.Values{
 		"token": {pwReset.Token},
 	}
+	fmt.Println("vals:", vals)
 	resetURL := "http://localhost:3000/reset-pw?" + vals.Encode()
 	err = u.EmailService.ForgotPassword(data.Email, resetURL)
 	if err != nil {
 		// TODO: Handle other error cases in the future (f.ex. email doesn't exist)
-		fmt.Println(err)
+		fmt.Println("ProcessForgotPassword.ForgotPassword:", err)
 		http.Error(w, "Something went wrong.", http.StatusInternalServerError)
 		return
 	}
@@ -153,8 +154,8 @@ func (umw UserMiddleware) SetUser(next http.Handler) http.Handler {
 		// proceed with the request. The goal of this middleware isn't to limit
 		// access. It only sets the user in the context if it can.
 		token, err := readCookie(r, CookieSession)
-		if err != nil || token == "" {
-			fmt.Println("Token is empty")
+		if err != nil {
+			fmt.Println("SetUser: Token is empty")
 			// Cannot lookup the user with no cookie, so proceed without a user being
 			// set, then return.
 			next.ServeHTTP(w, r)
@@ -202,7 +203,7 @@ func (u Users) ProcessResetPassword(w http.ResponseWriter, r *http.Request) {
 	data.Password = r.FormValue("password")
 	user, err := u.PasswordResetService.Consume(data.Token)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("ProcessResetPassword.Consume:", err)
 		// TODO: Distinguish between differnt types of errors
 		http.Error(w, "Something went wrong", http.StatusInternalServerError)
 		return
@@ -210,7 +211,7 @@ func (u Users) ProcessResetPassword(w http.ResponseWriter, r *http.Request) {
 
 	err = u.UserService.UpdatePassword(user.ID, data.Password)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("ProcessResetPassword.UpdatePassword:", err)
 		http.Error(w, "Something went wrong", http.StatusInternalServerError)
 		return
 	}
@@ -220,7 +221,7 @@ func (u Users) ProcessResetPassword(w http.ResponseWriter, r *http.Request) {
 	// in  page.
 	session, err := u.SessionService.Create(user.ID)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("SessionService.Create:", err)
 		// TODO: Distinguish between differnt types of errors
 		http.Redirect(w, r, "/signin", http.StatusFound)
 		return
