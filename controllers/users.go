@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strconv"
 
 	"githubn.com/Germanicus1/lenslocked/context"
 	"githubn.com/Germanicus1/lenslocked/models"
@@ -21,6 +22,7 @@ type Users struct {
 	SessionService       *models.SessionService
 	PasswordResetService *models.PasswordResetService
 	EmailService         *models.EmailService
+	MagicLinkService     *models.MagicLinkService
 }
 
 func (u Users) New(w http.ResponseWriter, r *http.Request) {
@@ -108,9 +110,11 @@ func (u Users) CurrentUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Current user: %s\n", user.Email)
 }
 
+// INCOMPLETE: Fix for magic link
 func (u Users) ForgotPassword(w http.ResponseWriter, r *http.Request) {
 	var data struct {
-		Email string
+		Email         string
+		SendMagicLink bool
 	}
 	data.Email = r.FormValue("email")
 	u.Templates.ForgotPassword.Execute(w, r, data)
@@ -118,9 +122,28 @@ func (u Users) ForgotPassword(w http.ResponseWriter, r *http.Request) {
 
 func (u Users) ProcessForgotPassword(w http.ResponseWriter, r *http.Request) {
 	var data struct {
-		Email string
+		Email         string
+		SendMagicLink bool
 	}
 	data.Email = r.FormValue("email")
+
+	// Does the user want a magic link?
+	SendMagicLink, err := strconv.ParseBool(r.FormValue("magiclink"))
+	if err != nil {
+		fmt.Errorf("SendMagicLink: %w", err)
+		return
+	}
+	data.SendMagicLink = SendMagicLink
+	if data.SendMagicLink {
+		// INCOMPLETE
+		magicLink, err := u.PasswordResetService.Create(data.Email)
+		if err != nil {
+			fmt.Errorf("SendMagicLink: %w", err)
+			return
+		}
+		fmt.Println(magicLink)
+	}
+
 	pwReset, err := u.PasswordResetService.Create(data.Email)
 	if err != nil {
 		// TODO: Handle other error cases in the future (f.ex. email doesn't exist)

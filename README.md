@@ -20,5 +20,12 @@ Just a note so I remember where I am. Progress is not stored on the course site.
 - [x] 19.10 Reset Password HTML Template
 - [x] 19.11 Update Password Function
 - [x] 19.12 PasswordReset Creation
-- [ ] 19.13 Implementing Consume
+- [x] 19.13 Implementing Consume
 - [ ] 19.15 Password Reset Exercises
+
+## Exercise 19.15.1 Magic Link
+
+- [x] Create a migration, e.g. a table for the magic links. This is nearly identical to the session password_resets table
+- [x] Stub magic link creation and consumation (models/magic-link.go)
+- [x] Add the magic link service to the users controller
+- [ ] Alter the forgot password for and handler to include the magic link selection from the user. Default = false
