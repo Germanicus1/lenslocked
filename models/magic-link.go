@@ -53,7 +53,6 @@ func (service *MagicLinkService) CreateMagicLink(email string) (*MagicLink, erro
 	if err != nil {
 		return nil, fmt.Errorf("MagicLink.Create: %w", err)
 	}
-	fmt.Println("MLToken: ", token)
 	duration := service.Duration
 	if duration == 0 {
 		duration = DefualtResetDuration
@@ -79,27 +78,16 @@ func (service *MagicLinkService) CreateMagicLink(email string) (*MagicLink, erro
 
 func (service *MagicLinkService) ConsumeMagicLink(token string) (*User, error) {
 	tokenHash := service.hash(token)
-	fmt.Println("TH:", tokenHash)
 	var user User
 	var ml MagicLink
-	tableName := "magic_links"
-	query := fmt.Sprintf(`
-		SELECT %s.id,
-			%s.expires_at,
+	row := service.DB.QueryRow(`
+		SELECT magic_links.id,
+			magic_links.expires_at,
 			users.id,
 			users.email
-		FROM %s
-			JOIN users ON users.id = %s.user_id
-		WHERE %s.ml_token_hash = $1`, tableName, tableName, tableName, tableName, tableName)
-	row := service.DB.QueryRow(query, tokenHash)
-	// row := service.DB.QueryRow(`
-	// 	SELECT magic_links.id,
-	// 		magic_links.expires_at,
-	// 		users.id,
-	// 		users.email
-	// 	FROM magic_links
-	// 		JOIN users ON users.id = magic_links.user_id
-	// 	WHERE magic_links.ml_token_hash = $1`, tokenHash)
+		FROM magic_links
+			JOIN users ON users.id = magic_links.user_id
+		WHERE magic_links.ml_token_hash = $1`, tokenHash)
 	err := row.Scan(
 		&ml.ID, &ml.ExpiresAt,
 		&user.ID, &user.Email)

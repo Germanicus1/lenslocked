@@ -33,7 +33,6 @@ func (u Users) New(w http.ResponseWriter, r *http.Request) {
 }
 
 func (u Users) Create(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Creating a user")
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 	user, err := u.UserService.Create(email, password)
@@ -131,7 +130,6 @@ func (u Users) ProcessForgotPassword(w http.ResponseWriter, r *http.Request) {
 	// checkbox is not cheched, isChecked is nil.
 	_, isChecked := r.Form["magiclink"]
 	if isChecked {
-		fmt.Println("Magic link checkbox checked")
 		ml, err := u.MagicLinkService.CreateMagicLink(data.Email)
 		if err != nil {
 			fmt.Println("ProcessForgotPassword.CreateMagicLink:", err)
@@ -143,8 +141,6 @@ func (u Users) ProcessForgotPassword(w http.ResponseWriter, r *http.Request) {
 		}
 		data.Route = "mlsignin"
 	} else {
-		fmt.Println("Magic link checkbox NOT checked")
-
 		pwReset, err := u.PasswordResetService.Create(data.Email)
 		if err != nil {
 			// TODO: Handle other error cases in the future (f.ex. email doesn't exist)
@@ -160,7 +156,6 @@ func (u Users) ProcessForgotPassword(w http.ResponseWriter, r *http.Request) {
 	}
 	// fmt.Println("vals:", data.Vals)
 	resetURL := "http://localhost:3000/" + data.Route + "?" + data.Vals.Encode()
-	fmt.Println(resetURL)
 	err := u.EmailService.ForgotPassword(data.Email, resetURL)
 	if err != nil {
 		// TODO: Handle other error cases in the future (f.ex. email doesn't exist)
@@ -226,8 +221,6 @@ func (u Users) ProcessMagicLink(w http.ResponseWriter, r *http.Request) {
 		Token string
 	}
 	data.Token = r.URL.Query().Get("mltoken")
-
-	fmt.Println("ProcessMagicLink: data.Token: ", data.Token)
 	user, err := u.MagicLinkService.ConsumeMagicLink(data.Token)
 	if err != nil {
 		fmt.Println("ProcessMagicLink.Consume:", err)
