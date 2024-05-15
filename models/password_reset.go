@@ -16,10 +16,9 @@ const (
 )
 
 type PasswordReset struct {
-	ID     int
-	UserID int
-	// Token is only set when a PasswordReset is created.
-	Token     string
+	ID        int
+	UserID    int
+	Token     string // Token is only set when a PasswordReset is created.
 	TokenHash string
 	ExpiresAt time.Time
 }
