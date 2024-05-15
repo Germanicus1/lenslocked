@@ -20,6 +20,7 @@ type Users struct {
 	UserService          *models.UserService
 	SessionService       *models.SessionService
 	PasswordResetService *models.PasswordResetService
+	MagicLinkService     *models.MagicLinkService
 	EmailService         *models.EmailService
 }
 
@@ -65,6 +66,7 @@ func (u Users) ProcessSignIn(w http.ResponseWriter, r *http.Request) {
 		Email    string
 		Password string
 	}
+
 	data.Email = r.FormValue("email")
 	data.Password = r.FormValue("password")
 	user, err := u.UserService.Authenticate(data.Email, data.Password)
@@ -110,31 +112,56 @@ func (u Users) CurrentUser(w http.ResponseWriter, r *http.Request) {
 
 func (u Users) ForgotPassword(w http.ResponseWriter, r *http.Request) {
 	var data struct {
-		Email string
+		Email            string
+		magicLinkChecked bool
 	}
 	data.Email = r.FormValue("email")
+	_, data.magicLinkChecked = r.Form["magiclink"]
 	u.Templates.ForgotPassword.Execute(w, r, data)
 }
 
 func (u Users) ProcessForgotPassword(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		Email string
+		Vals  url.Values
+		Route string
 	}
 	data.Email = r.FormValue("email")
-	pwReset, err := u.PasswordResetService.Create(data.Email)
-	if err != nil {
-		// TODO: Handle other error cases in the future (f.ex. email doesn't exist)
-		fmt.Println("ProcessForgotPassword.Create:", err)
-		http.Error(w, "Something went wrong.", http.StatusInternalServerError)
-		return
+	// Checking for magic link checkbox. If the magic link
+	// checkbox is not cheched, isChecked is nil.
+	_, isChecked := r.Form["magiclink"]
+	if isChecked {
+		fmt.Println("Magic link checkbox checked")
+		ml, err := u.MagicLinkService.CreateMagicLink(data.Email)
+		if err != nil {
+			fmt.Println("ProcessForgotPassword.CreateMagicLink:", err)
+			http.Error(w, "Something went wrong.", http.StatusInternalServerError)
+			return
+		}
+		data.Vals = url.Values{
+			"mltoken": {ml.MLToken},
+		}
+		data.Route = "mlsignin"
+	} else {
+		fmt.Println("Magic link checkbox NOT checked")
+
+		pwReset, err := u.PasswordResetService.Create(data.Email)
+		if err != nil {
+			// TODO: Handle other error cases in the future (f.ex. email doesn't exist)
+			fmt.Println("ProcessForgotPassword.Create:", err)
+			http.Error(w, "Something went wrong.", http.StatusInternalServerError)
+			return
+		}
+		// TODO: "" needs to be the full path with domain.
+		data.Vals = url.Values{
+			"token": {pwReset.Token},
+		}
+		data.Route = "reset-pw"
 	}
-	// TODO: "" needs to be the full path with domain
-	vals := url.Values{
-		"token": {pwReset.Token},
-	}
-	fmt.Println("vals:", vals)
-	resetURL := "http://localhost:3000/reset-pw?" + vals.Encode()
-	err = u.EmailService.ForgotPassword(data.Email, resetURL)
+	// fmt.Println("vals:", data.Vals)
+	resetURL := "http://localhost:3000/" + data.Route + "?" + data.Vals.Encode()
+	fmt.Println(resetURL)
+	err := u.EmailService.ForgotPassword(data.Email, resetURL)
 	if err != nil {
 		// TODO: Handle other error cases in the future (f.ex. email doesn't exist)
 		fmt.Println("ProcessForgotPassword.ForgotPassword:", err)
@@ -155,7 +182,7 @@ func (umw UserMiddleware) SetUser(next http.Handler) http.Handler {
 		// access. It only sets the user in the context if it can.
 		token, err := readCookie(r, CookieSession)
 		if err != nil {
-			fmt.Println("SetUser: Token is empty")
+			// fmt.Println("SetUser: Token is empty")
 			// Cannot lookup the user with no cookie, so proceed without a user being
 			// set, then return.
 			next.ServeHTTP(w, r)
@@ -192,6 +219,35 @@ func (u Users) ResetPassword(w http.ResponseWriter, r *http.Request) {
 	}
 	data.Token = r.FormValue("token")
 	u.Templates.ResetPassword.Execute(w, r, data)
+}
+
+func (u Users) ProcessMagicLink(w http.ResponseWriter, r *http.Request) {
+	var data struct {
+		Token string
+	}
+	data.Token = r.URL.Query().Get("mltoken")
+
+	fmt.Println("ProcessMagicLink: data.Token: ", data.Token)
+	user, err := u.MagicLinkService.ConsumeMagicLink(data.Token)
+	if err != nil {
+		fmt.Println("ProcessMagicLink.Consume:", err)
+		// TODO: Distinguish between differnt types of errors
+		http.Error(w, "Something went wrong", http.StatusInternalServerError)
+		return
+	}
+	// Sign in the user now that the password has been reset.
+	// Any errors from this point onwards should redirect the user to the sign
+	// in  page.
+	session, err := u.SessionService.Create(user.ID)
+	if err != nil {
+		fmt.Println("SessionService.Create:", err)
+		// TODO: Distinguish between differnt types of errors
+		http.Redirect(w, r, "/signin", http.StatusFound)
+		return
+	}
+	setCookie(w, CookieSession, session.Token)
+	http.Redirect(w, r, "/users/me", http.StatusFound)
+
 }
 
 func (u Users) ProcessResetPassword(w http.ResponseWriter, r *http.Request) {

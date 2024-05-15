@@ -79,6 +79,9 @@ func main() {
 	pwResetService := &models.PasswordResetService{
 		DB: db,
 	}
+	mlService := &models.MagicLinkService{
+		DB: db,
+	}
 	emailService := models.NewEmailService(cfg.SMPT)
 
 	// Setup middleware
@@ -96,6 +99,7 @@ func main() {
 		UserService:          userService,
 		SessionService:       sessionService,
 		PasswordResetService: pwResetService,
+		MagicLinkService:     mlService,
 		EmailService:         emailService,
 	}
 
@@ -141,6 +145,7 @@ func main() {
 	r.Post("/forgot-pw", usersC.ProcessForgotPassword)
 	r.Get("/reset-pw", usersC.ResetPassword)
 	r.Post("/reset-pw", usersC.ProcessResetPassword)
+	r.Get("/mlsignin", usersC.ProcessMagicLink)
 	r.Route("/users/me", func(r chi.Router) {
 		r.Use(umw.RequireUser)
 		r.Get("/", usersC.CurrentUser)
@@ -151,7 +156,7 @@ func main() {
 	})
 
 	// Start the server
-	fmt.Printf("Starting the server on %s...", cfg.Server.Adress)
+	fmt.Printf("\nStarting the server on %s...\n", cfg.Server.Adress)
 	err = http.ListenAndServe(cfg.Server.Adress, r)
 	if err != nil {
 		panic(err)
