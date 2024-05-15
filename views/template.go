@@ -34,6 +34,13 @@ func ParseFS(fs fs.FS, pattern ...string) (Template, error) {
 			"currentUser": func() (template.HTML, error) {
 				return "", fmt.Errorf("currentUser not implemented")
 			},
+			"errors": func() []string {
+				return []string{
+					// "Don't do that",
+					"Email already in use",
+					// "Something went wrong",
+				}
+			},
 		},
 	)
 	tpl, err := tpl.ParseFS(fs, pattern...)
@@ -87,18 +94,3 @@ func (t Template) Execute(w http.ResponseWriter, r *http.Request, data interface
 	}
 	io.Copy(w, &buf)
 }
-
-// func (t Template) LoadHTMLEmail(htmlEmailFile string, data interface{}) (Template, error) {
-// htmlTemplate, err := template.ParseFiles(htmlEmailFile)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	// Execute HTML template
-// 	var htmlContent bytes.Buffer
-// 	err = htmlTemplate.Execute(&htmlContent, data)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-
-// 	return htmlTemplate, nil
-// }
