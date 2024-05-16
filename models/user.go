@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	ErrEmailTaken = errors.New("models: email address is taken already used")
+	ErrEmailTaken = errors.New("models: email address is already in use")
 )
 
 type User struct {
