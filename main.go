@@ -102,7 +102,6 @@ func main() {
 		MagicLinkService:     mlService,
 		EmailService:         emailService,
 	}
-
 	usersC.Templates.New = views.Must(views.ParseFS(
 		templates.FS,
 		"signup.gohtml", "tailwind.gohtml",
