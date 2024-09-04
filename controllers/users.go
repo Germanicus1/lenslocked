@@ -6,6 +6,7 @@ import (
 	"net/url"
 
 	"githubn.com/Germanicus1/lenslocked/context"
+	"githubn.com/Germanicus1/lenslocked/errors"
 	"githubn.com/Germanicus1/lenslocked/models"
 )
 
@@ -41,6 +42,9 @@ func (u Users) Create(w http.ResponseWriter, r *http.Request) {
 	data.Password = r.FormValue("password")
 	user, err := u.UserService.Create(data.Email, data.Password)
 	if err != nil {
+		if errors.Is(err, models.ErrEmailTaken) {
+			err = errors.Public(err, "That email is already associated with an account")
+		}
 		u.Templates.New.Execute(w, r, data, err)
 		return
 	}
