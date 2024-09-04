@@ -15,10 +15,12 @@ import (
 	"githubn.com/Germanicus1/lenslocked/models"
 )
 
+// public is an interface that represents a public method.
 type public interface {
 	Public() string
 }
 
+// Must returns the template and panics if there is an error.
 func Must(t Template, err error) Template {
 	if err != nil {
 		panic(err)
@@ -26,6 +28,7 @@ func Must(t Template, err error) Template {
 	return t
 }
 
+// ParseFS parses the templates from the given file system using the specified pattern.
 func ParseFS(fs fs.FS, pattern ...string) (Template, error) {
 	tpl := template.New(pattern[0])
 
@@ -53,10 +56,12 @@ func ParseFS(fs fs.FS, pattern ...string) (Template, error) {
 	}, nil
 }
 
+// Template represents an HTML template.
 type Template struct {
 	htmlTpl *template.Template
 }
 
+// Execute executes the template and writes the result to the http.ResponseWriter.
 func (t Template) Execute(w http.ResponseWriter, r *http.Request, data interface{}, errs ...error) {
 	tpl, err := t.htmlTpl.Clone()
 	if err != nil {
@@ -91,6 +96,7 @@ func (t Template) Execute(w http.ResponseWriter, r *http.Request, data interface
 	io.Copy(w, &buf)
 }
 
+// errMessages returns the error messages from the given errors.
 func errMessages(errs ...error) []string {
 	var msgs []string
 	var pubErr public
