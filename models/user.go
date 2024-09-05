@@ -14,6 +14,8 @@ import (
 var (
 	ErrEmailTaken = errors.New("models: email address is already in use")
 	ErrAccountNotFound = errors.New("models: no account found")
+	ErrPasswordIncorrect = errors.New("models: incorrect password")
+	ErrInvalidEmail = errors.New("models: invalid email address")
 )
 
 type User struct {
@@ -64,12 +66,17 @@ func (us *UserService) Authenticate(email, password string) (*User, error) {
   FROM users WHERE email=$1`, email)
 	err := row.Scan(&user.ID, &user.PasswordHash)
 	if err != nil {
-		return nil, fmt.Errorf("authenticate: %w", err)
+		if errors.Is(err, sql.ErrNoRows) {
+			fmt.Println(fmt.Errorf("authenticate: %w", ErrAccountNotFound))
+			return nil, ErrAccountNotFound
+		}
 	}
-
 	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
 	if err != nil {
-		return nil, fmt.Errorf("authenticate: %w", err)
+		if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
+			fmt.Println(fmt.Errorf("authenticate: %w", ErrPasswordIncorrect))
+			return nil, ErrPasswordIncorrect
+		}
 	}
 	return &user, nil
 }

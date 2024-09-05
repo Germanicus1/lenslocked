@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"regexp"
 
 	"githubn.com/Germanicus1/lenslocked/context"
 	"githubn.com/Germanicus1/lenslocked/errors"
@@ -35,6 +36,9 @@ func (u Users) New(w http.ResponseWriter, r *http.Request) {
 
 // Create is used to process the signup form when a user tries to create a new
 // account.
+
+var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
+
 func (u Users) Create(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		Email    string
@@ -42,6 +46,13 @@ func (u Users) Create(w http.ResponseWriter, r *http.Request) {
 	}
 	data.Email = r.FormValue("email")
 	data.Password = r.FormValue("password")
+
+	if !emailRegex.MatchString(data.Email) {
+		err := errors.Public(nil,"Invalid email address")
+		u.Templates.New.Execute(w, r, data, err)
+		return
+	}
+
 	user, err := u.UserService.Create(data.Email, data.Password)
 	if err != nil {
 		if errors.Is(err, models.ErrEmailTaken) {
@@ -83,12 +94,12 @@ func (u Users) ProcessSignIn(w http.ResponseWriter, r *http.Request) {
 	data.Password = r.FormValue("password")
 	user, err := u.UserService.Authenticate(data.Email, data.Password)
 	if err != nil {
-		if errors.Is(err, models.ErrAccountNotFound) {
+		if errors.Is(err, models.ErrAccountNotFound) || errors.Is(err, models.ErrPasswordIncorrect) {
 			err = errors.Public(err, "Invalid email address or password")
+			http.Redirect(w, r, "/signin", http.StatusUnauthorized)
+			u.Templates.SignIn.Execute(w, r, data, err)
+			return
 		}
-		u.Templates.SignIn.Execute(w, r, data, err)
-		http.Redirect(w, r, "/signin", http.StatusFound)
-		return
 	}
 	session, err := u.SessionService.Create(user.ID)
 	if err != nil {

@@ -45,11 +45,11 @@ Just a note so I remember where I am, bacause progress is not stored on the cour
 - [x] 20.8 [Public vs Internal Errors](https://courses.calhoun.io/lessons/les_wdv2_pub_vs_int_errs)
 - [x] 20.9 [Creating Public Errors](https://courses.calhoun.io/lessons/les_wdv2_create_pub_errs)
 - [x] 20.10 [Using Public Errors](https://courses.calhoun.io/lessons/les_wdv2_using_pub_errs)
-- [ ] 20.11 [Better Error Handling Exercises](https://courses.calhoun.io/lessons/les_wdv2_better_err_exercises)
+- [x] 20.11 [Better Error Handling Exercises](https://courses.calhoun.io/lessons/les_wdv2_better_err_exercises)
 
 ### Section 21
 
-- [ ] [Galleries Overview](https://courses.calhoun.io/lessons/les_wdv2_galleries_overview)
+- [x] [Galleries Overview](https://courses.calhoun.io/lessons/les_wdv2_galleries_overview)
 - [ ] [Gallery Model and Migration](https://courses.calhoun.io/lessons/les_wdv2_gallery_model_and_migration)
 - [ ] Creating Gallery Records
 - [ ] Querying for Galleries by ID
@@ -73,3 +73,59 @@ Just a note so I remember where I am, bacause progress is not stored on the cour
 - [ ] Extra Gallery Checks with Functional Options
 - [ ] Delete Gallery Handler
 - [ ] Gallery Exercises
+
+
+## Gallery functionallity
+- [ ] Create a new gallary with title
+- [ ] Upload images to a gallary
+- [ ] Delete images from a gallary
+- [ ] Update the title of the gallary
+- [ ] View the gallary so we can share it with others
+- [ ] Delete a gallary
+- [ ] View a list of gallaries we are allowed to edit
+
+### Views
+
+This might give us the following views to create:
+
+| Functionality | Page |
+|---|---|
+Create a new gallary| new
+Edit a gallary| edit
+View a gallary|show
+View a list of all gallaries|index
+
+### Controllers
+
+We will also need controller (aka http handlers) to support those views.
+
+Controller|Description
+|-|-|
+New and Create|Render and process a new-gallery form
+Edit and Update|Render and process a form to edit a gallary
+Show|Render a gallary
+Delete|Delete a gallary
+
+### Models
+
+We need to persist the data in our models package. To this we need to support the following:
+
+- Creating a gallery
+- Updating a gallery
+- Querying for a gallery by ID
+- Querying for all galleries with a user ID
+- Deleting a gallery
+
+**For later in a separate handler:**
+- Creating an image for a gallery
+- Deleting an image from a gallery
+
+
+### Data structures
+
+**Galleries will need:**
+- ID
+- Title
+- UserID (owner)
+- Associateds images
+
