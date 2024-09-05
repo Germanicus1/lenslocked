@@ -50,8 +50,8 @@ Just a note so I remember where I am, bacause progress is not stored on the cour
 ### Section 21
 
 - [x] [Galleries Overview](https://courses.calhoun.io/lessons/les_wdv2_galleries_overview)
-- [ ] [Gallery Model and Migration](https://courses.calhoun.io/lessons/les_wdv2_gallery_model_and_migration)
-- [ ] Creating Gallery Records
+- [x] [Gallery Model and Migration](https://courses.calhoun.io/lessons/les_wdv2_gallery_model_and_migration)
+- [ ] [Creating Gallery Records](https://courses.calhoun.io/lessons/les_wdv2_create_gallery_records)
 - [ ] Querying for Galleries by ID
 - [ ] Querying Galleries by UserID
 - [ ] Updating Gallery Records
