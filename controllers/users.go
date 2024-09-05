@@ -33,6 +33,8 @@ func (u Users) New(w http.ResponseWriter, r *http.Request) {
 	u.Templates.New.Execute(w, r, data)
 }
 
+// Create is used to process the signup form when a user tries to create a new
+// account.
 func (u Users) Create(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		Email    string
@@ -51,7 +53,8 @@ func (u Users) Create(w http.ResponseWriter, r *http.Request) {
 	session, err := u.SessionService.Create(user.ID)
 	if err != nil {
 		fmt.Println("SessionService.Create:", err)
-		// TODO: Long term, we should show a warning about not being able to sign the user in.
+		// TODO: Long term, we should show a warning about not being
+		// able to sign the user in.
 		http.Redirect(w, r, "/signin", http.StatusFound)
 		return
 	}
@@ -59,6 +62,7 @@ func (u Users) Create(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/users/me", http.StatusFound)
 }
 
+// SignIn is used to process the sign in form when a user tries to sign in.
 func (u Users) SignIn(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		Email string
@@ -67,6 +71,8 @@ func (u Users) SignIn(w http.ResponseWriter, r *http.Request) {
 	u.Templates.SignIn.Execute(w, r, data)
 }
 
+// ProcessSignIn is used to process the sign in form when a user tries to sign
+// in.
 func (u Users) ProcessSignIn(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		Email    string
@@ -77,20 +83,24 @@ func (u Users) ProcessSignIn(w http.ResponseWriter, r *http.Request) {
 	data.Password = r.FormValue("password")
 	user, err := u.UserService.Authenticate(data.Email, data.Password)
 	if err != nil {
-		fmt.Println(err)
-		http.Error(w, "Something went wrong.", http.StatusInternalServerError)
+		if errors.Is(err, models.ErrAccountNotFound) {
+			err = errors.Public(err, "Invalid email address or password")
+		}
+		u.Templates.SignIn.Execute(w, r, data, err)
+		http.Redirect(w, r, "/signin", http.StatusFound)
 		return
 	}
 	session, err := u.SessionService.Create(user.ID)
 	if err != nil {
 		fmt.Println(err)
-		http.Error(w, "Something went wrong.", http.StatusInternalServerError)
+		http.Error(w, "Something went wrong", http.StatusInternalServerError)
 		return
 	}
 	setCookie(w, CookieSession, session.Token)
 	http.Redirect(w, r, "/users/me", http.StatusFound)
 }
 
+// ProcessSignOut is used to process a sign out request.
 func (u Users) ProcessSignOut(w http.ResponseWriter, r *http.Request) {
 	token, err := readCookie(r, CookieSession)
 	if err != nil {
@@ -100,7 +110,7 @@ func (u Users) ProcessSignOut(w http.ResponseWriter, r *http.Request) {
 	err = u.SessionService.Delete(token)
 	if err != nil {
 		fmt.Println(err)
-		http.Error(w, "Something went wrong.", http.StatusInternalServerError)
+		http.Error(w, "Something went wrong", http.StatusInternalServerError)
 		return
 	}
 	deleteCookie(w, CookieSession)
@@ -167,7 +177,7 @@ func (u Users) ProcessForgotPassword(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		// TODO: Handle other error cases in the future (f.ex. email doesn't exist)
 		fmt.Println("ProcessForgotPassword.ForgotPassword:", err)
-		http.Error(w, "Something went wrong.", http.StatusInternalServerError)
+		http.Error(w, "Something went wrong", http.StatusInternalServerError)
 		return
 	}
 	u.Templates.CheckYourEmail.Execute(w, r, data)
@@ -223,6 +233,8 @@ func (u Users) ResetPassword(w http.ResponseWriter, r *http.Request) {
 	u.Templates.ResetPassword.Execute(w, r, data)
 }
 
+// ProcessMagicLink is used to process the magic link when a user tries to sign
+// in with a magic link.
 func (u Users) ProcessMagicLink(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		Token string
@@ -250,6 +262,8 @@ func (u Users) ProcessMagicLink(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// ProcessResetPassword is used to process the reset password form when a user
+// tries to reset their password.
 func (u Users) ProcessResetPassword(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		Token    string
@@ -272,9 +286,9 @@ func (u Users) ProcessResetPassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Sign in the user now that the password has been reset.
-	// Any errors from this point onwards should redirect the user to the sign
-	// in  page.
+	// Sign in the user now that the password has been reset. Any errors
+	// from this point onwards should redirect the user to the sign in
+	// page.
 	session, err := u.SessionService.Create(user.ID)
 	if err != nil {
 		fmt.Println("SessionService.Create:", err)

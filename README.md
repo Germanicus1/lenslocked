@@ -44,5 +44,32 @@ Just a note so I remember where I am, bacause progress is not stored on the cour
 - [x] 20.7 [Accepting Errors in Templates](https://courses.calhoun.io/lessons/les_wdv2_accept_errors_in_tpls)
 - [x] 20.8 [Public vs Internal Errors](https://courses.calhoun.io/lessons/les_wdv2_pub_vs_int_errs)
 - [x] 20.9 [Creating Public Errors](https://courses.calhoun.io/lessons/les_wdv2_create_pub_errs)
-- [ ] 20.10 [Using Public Errors](https://courses.calhoun.io/lessons/les_wdv2_using_pub_errs)
-- [ ] 20.11 Better Error Handling Exercises
+- [x] 20.10 [Using Public Errors](https://courses.calhoun.io/lessons/les_wdv2_using_pub_errs)
+- [ ] 20.11 [Better Error Handling Exercises](https://courses.calhoun.io/lessons/les_wdv2_better_err_exercises)
+
+### Section 21
+
+- [ ] [Galleries Overview](https://courses.calhoun.io/lessons/les_wdv2_galleries_overview)
+- [ ] [Gallery Model and Migration](https://courses.calhoun.io/lessons/les_wdv2_gallery_model_and_migration)
+- [ ] Creating Gallery Records
+- [ ] Querying for Galleries by ID
+- [ ] Querying Galleries by UserID
+- [ ] Updating Gallery Records
+- [ ] Deleting Gallery Records
+- [ ] New Gallery Handler
+- [ ] views.Template Name Bug
+- [ ] New Gallery Template
+- [ ] Gallery Routing and CSRF Bug Fixes
+- [ ] Create Gallery Handler
+- [ ] Edit Gallery Handler
+- [ ] Edit Gallery Template`
+- [ ] Update Gallery Handler
+- [ ] Gallery Index Handler
+- [ ] Discovering and Fixing a Gallery Index Bug
+- [ ] Gallery Index Template Continued
+- [ ] Show Gallery Handler
+- [ ] Show Gallery Template and a Tailwind Update
+- [ ] Extracting Common Gallery Code
+- [ ] Extra Gallery Checks with Functional Options
+- [ ] Delete Gallery Handler
+- [ ] Gallery Exercises
