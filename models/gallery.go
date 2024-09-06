@@ -58,9 +58,7 @@ func (service *GalleryService) ByUserId(userID int) ([]Gallery, error){
 	if err != nil {
 		return nil, fmt.Errorf("ByUserId: error querying galleries: %v", err)
 	}
-
 	var galleries []Gallery
-
 	for rows.Next(){
 		var gallery Gallery
 		err := rows.Scan(&gallery.ID, &gallery.Title)
@@ -69,9 +67,19 @@ func (service *GalleryService) ByUserId(userID int) ([]Gallery, error){
 		}
 		galleries = append(galleries, gallery)
 	}
-
 	if rows.Err() != nil {
 		return nil, fmt.Errorf("ByUserId: error iterating galleries: %v", rows.Err())
 	}
 	return galleries, nil
+}
+
+func (service *GalleryService) Update(gallery *Gallery) error{
+	_, err := service.DB.Exec(`
+		UPDATE galleries
+		SET title = $2
+		WHERE id = $1;`, gallery.ID, gallery.Title)
+	if err != nil {
+		return fmt.Errorf("Update: error updating gallery: %v", err)
+	}
+	return nil
 }
