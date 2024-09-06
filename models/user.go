@@ -3,19 +3,13 @@ package models
 import (
 	"database/sql"
 	"errors"
+	//	"errors"
 	"fmt"
 	"strings"
 
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgerrcode"
 	"golang.org/x/crypto/bcrypt"
-)
-
-var (
-	ErrEmailTaken = errors.New("models: email address is already in use")
-	ErrAccountNotFound = errors.New("models: no account found")
-	ErrPasswordIncorrect = errors.New("models: incorrect password")
-	ErrInvalidEmail = errors.New("models: invalid email address")
 )
 
 type User struct {

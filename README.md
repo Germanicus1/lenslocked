@@ -51,8 +51,8 @@ Just a note so I remember where I am, bacause progress is not stored on the cour
 
 - [x] [Galleries Overview](https://courses.calhoun.io/lessons/les_wdv2_galleries_overview)
 - [x] [Gallery Model and Migration](https://courses.calhoun.io/lessons/les_wdv2_gallery_model_and_migration)
-- [ ] [Creating Gallery Records](https://courses.calhoun.io/lessons/les_wdv2_create_gallery_records)
-- [ ] Querying for Galleries by ID
+- [x] [Creating Gallery Records](https://courses.calhoun.io/lessons/les_wdv2_create_gallery_records)
+- [ ] [Querying for Galleries by ID](https://courses.calhoun.io/lessons/les_wdv2_query_gallery_by_id)
 - [ ] Querying Galleries by UserID
 - [ ] Updating Gallery Records
 - [ ] Deleting Gallery Records
