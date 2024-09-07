@@ -54,9 +54,9 @@ Just a note so I remember where I am, bacause progress is not stored on the cour
 - [x] [Creating Gallery Records](https://courses.calhoun.io/lessons/les_wdv2_create_gallery_records)
 - [x] [Querying for Galleries by ID](https://courses.calhoun.io/lessons/les_wdv2_query_gallery_by_id)
 - [x] Querying Galleries by UserID
-- [ ] [Updating Gallery Records](https://courses.calhoun.io/lessons/les_wdv2_update_gallery_records)
-- [ ] Deleting Gallery Records
-- [ ] New Gallery Handler
+- [x] [Updating Gallery Records](https://courses.calhoun.io/lessons/les_wdv2_update_gallery_records)
+- [X] [Deleting Gallery Recor<ds](https://courses.calhoun.io/lessons/les_wdv2_delete_gallery_records)
+- [ ] [New Gallery Handler](https://courses.calhoun.io/lessons/les_wdv2_new_gallery_handler)
 - [ ] views.Template Name Bug
 - [ ] New Gallery Template
 - [ ] Gallery Routing and CSRF Bug Fixes
